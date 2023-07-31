@@ -15,6 +15,13 @@ class CreateMasterCertificateTable extends Migration
     {
         Schema::create('master_certificate', function (Blueprint $table) {
             $table->id();
+            $table->string('event_name', 150);
+            $table->text('event_description');
+            $table->date('event_date');
+            $table->text('event_signed')->default('[]');
+            $table->enum('status',['Publish','Draft','Finished'])->default('Publish');
+            $table->unsignedBigInteger('post_by');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

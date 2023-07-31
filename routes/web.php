@@ -35,7 +35,15 @@ Route::group([
 
     Route::group(['middleware' => 'auth:api'], function(){
         Route::get('warranty/{id}', 'WarrantyController@checkWarranty');
-    });
 
+        Route::group(['prefix' => 'master-certificate'], function() {
+            Route::get('/', 'MasterCertificateController@index');
+            Route::post('/', 'MasterCertificateController@store');
+            Route::get('/{id}', 'MasterCertificateController@show');
+            Route::delete('/{id}', 'MasterCertificateController@destroy');
+            Route::put('/{id}/edit', 'MasterCertificateController@update');
+        });
+
+    });
 
 });
