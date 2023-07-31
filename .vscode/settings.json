@@ -1,0 +1,10 @@
+{
+    "[php]":{
+        "editor.formatOnSave": false
+      },
+      "[blade]": {
+        "editor.formatOnSave": true
+      },
+      "blade.format.enable": true,
+      "files.associations": {".blade.php": "blade", ".tpl": "html"},
+}
