@@ -48,6 +48,17 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->singleton('filesystem', function ($app) {
+    return $app->loadComponent(
+        'filesystems',
+         Illuminate\Filesystem\FilesystemServiceProvider::class,
+         'filesystem'
+      );
+ });
+
+$app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
+$app->register(Intervention\Image\ImageServiceProvider::class);
+
 /*
 |--------------------------------------------------------------------------
 | Register Config Files
@@ -61,6 +72,8 @@ $app->singleton(
 
 $app->configure('app');
 $app->configure('jwt'); //nndproject
+$app->configure('filesystems');
+$app->withFacades(true, [ 'Intervention\Image\Facades\Image' => 'Image', ]);
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -79,6 +92,15 @@ $app->configure('jwt'); //nndproject
 // $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
 // ]);
+
+$app->routeMiddleware([
+    'throttle' => App\Http\Middleware\ThrottleRequests::class,
+]);
+
+$app->middleware([
+    App\Http\Middleware\MinifyViewOutputMiddleware::class
+]);
+
 
 /*
 |--------------------------------------------------------------------------

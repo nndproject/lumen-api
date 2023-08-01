@@ -16,19 +16,18 @@
 */
 
 $router->get('/', function () use ($router) {
-    return '#nndproject';
-    return $router->app->version();
+    return view('index');
+    // return $router->app->version();
 });
 
 Route::group([
     'prefix' => 'api'
 ], function ($router) {
 
-   /*  Route::group(['middleware' => 'throttle:2,1'], function(){
-       
-    }); */
+    Route::group(['middleware' => 'throttle:3, 1'], function(){
+        Route::post('login', 'AuthController@login');
+    });
 
-    Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
     Route::post('user-profile', 'AuthController@me');
@@ -41,7 +40,8 @@ Route::group([
             Route::post('/', 'MasterCertificateController@store');
             Route::get('/{id}', 'MasterCertificateController@show');
             Route::delete('/{id}', 'MasterCertificateController@destroy');
-            Route::put('/{id}/edit', 'MasterCertificateController@update');
+            Route::post('/{id}', 'MasterCertificateController@update');
+            Route::get('/search/{param}', 'MasterCertificateController@search');
         });
 
     });

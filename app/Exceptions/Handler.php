@@ -49,14 +49,36 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        // return parent::render($request, $exception);
-        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+       /*  $rendered = parent::render($request, $exception);
+        return response()->json([
+            'error' => [
+                'code' => $rendered->getStatusCode(),
+                'message' => $exception,
+            ]
+        ], $rendered->getStatusCode()); */
+        
+        if ( $exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException  || $exception instanceof ModelNotFoundException) {
             if ($request->wantsJson()) {
-                return response()->json(['message' => 'No way bruh!'],  404);
+                return response()->json([
+                    'success'   => false,
+                    "message"   => "Sorry!, Data Not Found",
+                    "error_code"    => 21761,
+                    "data"  => array()
+                ],  404);
             }
-            // return \abort(404);
             return redirect('/');
         }
+
+        /* if ( $exception instanceof ModelNotFoundException ) {
+            return response()->json([
+                'success'   => false,
+                "message"   => "Sorry!, Data Not Found",
+                "error_code"    => 21761,
+                "data"  => array()
+            ],  404);
+        } */
+        
         return parent::render($request, $exception);
+        // https://www.lumen.com/help/en-us/media-portal/api/error-responses.html
     }
 }

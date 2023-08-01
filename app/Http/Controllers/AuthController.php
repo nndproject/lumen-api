@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    private $helpers;
-
-
     public function __construct()
     {
         
@@ -36,7 +33,7 @@ class AuthController extends Controller
         $user   = User::where('email', $request->input('email'))->first();
 
         if (! $token = Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'UH! Unauthorized'], 401);
         }
 
        /*  $user = User::where('email', $request->email)->first();

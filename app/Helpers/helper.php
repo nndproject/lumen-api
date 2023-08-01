@@ -21,19 +21,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Crypt;
 
-if(! function_exists('fLinkOriginAuction')){
-    function fLinkOriginAuction($auction_code)
-    {
-        try {
-            $linkToOrigin = config('access.domain').'/eproc4/lelang/'.$auction_code; 
-        } catch (\Throwable $th) {
-            $linkToOrigin = 'https://www.datalpse.com/eproc4/lelang/'.$auction_code; 
-        }
-
-        return $linkToOrigin;
-    }
-}
-
 if(! function_exists('fWaNumber')){
     function fWaNumber($phone)
     {
@@ -53,214 +40,6 @@ if(! function_exists('fWaNumber')){
     }
 }
 
-if(! function_exists('fdayToMonth')){
-	function fdayToMonth($d)
-	{
-        if($d > 30){
-            $months = floor($d / 30);
-            $days = $d - ($months*30);
-            if($days > 0){
-                return  $months ." Bulan " . $days ." Hari";
-            }else{
-                return  $months ." Bulan";
-            }
-        } else{ return $d.' Hari'; }
-    }
-}
-
-if(! function_exists('fSession')){
-    function fSession()
-    {
-        $layanan = session()->get('auth.services');
-       
-        return $layanan;
-    }
-}
-
-if(! function_exists('fencryptIt')){
-    function fencryptIt($text)
-    {
-        /* $expected  = crypt('12345', '$2a$07$usesomesillystringforsalt$');
-        $correct   = crypt('12345', '$2a$07$usesomesillystringforsalt$');
-        $incorrect = crypt('apple', '$2a$07$usesomesillystringforsalt$');
-
-        var_dump(hash_equals($expected, $correct));
-        var_dump(hash_equals($expected, $incorrect)); */
-
-        $cryptKey           = 'qJB0rGtIn5UB1xG03efyCp';
-        $encryptionMethod   = "AES-256-CBC"; 
-        // $qEncoded           = openssl_encrypt($text, $encryptionMethod, $cryptKey);
-        $qEncoded           = Crypt::encryptString($text);
-        return( $qEncoded );
-    }
-
-}
-
-if(! function_exists('fdecryptIt')){
-    function fdecryptIt($text)
-    {
-        /* $cryptKey           = 'qJB0rGtIn5UB1xG03efyCp';
-        $encryptionMethod   = "AES-256-CBC"; 
-        $qDecoded      = openssl_decrypt($text, $encryptionMethod, $secretHash);
-        return( $qDecoded ); */
-
-       return Crypt::decryptString($text);
-    }
-
-}
-
-if(! function_exists('fstatusAkun')){
-    function fstatusAkun($status)
-    {
-         if($status =='0'){
-            return '<span class="badge badge-light txt-dark"><i class="fa fa-clock-o txt-dark"></i> Pending</span>';
-         }elseif($status =='1'){
-            return '<span class="badge badge-success fw-bold"><i class="fa fa-check txt-white"></i> Aktif</span>';
-         }elseif($status =='2'){
-            return '<span class="badge badge-warning fw-bold"><i class="fa fa-minus-circle"></i> Hold</span>';
-         }elseif($status =='3'){
-            return '<span class="badge badge-danger fw-bold"><i class="fa fa-warning txt-white"></i> Renewal</span>';
-         }
-
-        return $status;
-    }
-
-}
-
-if(! function_exists('fspanservice')){
-    function fspanservice($status)
-    {
-         if($status =='Waiting Payment'){
-            return '<span class="badge badge-light txt-dark"><i class="fa fa-clock-o txt-dark"></i> '.$status.'</span>';
-         }elseif($status =='Paid'){
-            return '<span class="badge badge-warning fw-bold"><i class="fa fa-check txt-white"></i> '.$status.'</span>';
-         }elseif($status =='Payment Confirmed'){
-            return '<span class="badge badge-success fw-bold"><i class="fa fa-check-circle txt-white"></i> '.$status.'</span>';
-         }elseif($status =='Payment Declined'){
-            return '<span class="badge badge-danger fw-bold"><i class="fa fa-warning txt-white"></i> '.$status.'</span>';
-         }elseif($status =='Due Date'){
-            return '<span class="badge badge-dark fw-bold"><i class="fa fa-warning txt-white"></i> '.$status.'</span>';
-         }elseif($status =='Non Actived'){
-            return '<span class="badge badge-dark fw-bold"><i class="fa fa-times-circle-o txt-white"></i> '.$status.'</span>';
-         }
-
-        return $status;
-    }
-
-}
-
-if(! function_exists('fConvertDaysToMonth')){
-    function fConvertDaysToMonth($d)
-    {
-        $convert = '29'; // days you want to convert
-
-		$years = ($convert / 365) ; // days / 365 days
-		$years = floor($years); // Remove all decimals
-
-		$month = ($convert % 365) / 30; // I choose 30 for Month (30,31) ;)
-		$month = floor($month); // Remove all decimals
-
-		$days = ($convert % 365) % 30; // the rest of days
-
-		// Echo all information set
-        $dreturn = $d." Hari";
-        if($years >= 1 ){
-            $dreturn        = $years.' Tahun ';
-            if($month>=1)
-                $dreturn    .= $month.' Bulan ';
-            if($days>=1)
-                $dreturn    .= $days.' Hari ';
-        }elseif($month >= 1){
-            $dreturn        = $month.' Bulan ';
-            if($days>=1)
-                $dreturn    .= $days.' Hari ';
-        }
-        return $dreturn;
-    }
-}
-
-
-if(! function_exists('fwarnaPercent')){
-    function fwarnaPercent($percent)
-    {
-    if($percent >= 95)
-    {
-        return 'txt-danger';
-    }elseif ($percent >=90 && $percent <95) {
-        return 'txt-warning';
-    }elseif ($percent >=85 && $percent <90) {
-        return 'txt-primary';
-    }elseif ($percent >=80 && $percent <85) {
-        return 'txt-success';
-    }elseif (!empty($percent) && $percent < 80 ) {
-        return 'text-info';
-    }else{
-        return 'txt-dark';
-    }
-    }
-}
-
-if(! function_exists('fnumber_format_short')){
-	function fnumber_format_short($n ,  $precision = 1)
-	{ 
-        // $n = (0+str_replace(",", "", $n));
-
-        // is this a number?
-        if (!is_numeric($n)) return $n;
-        
-        if ($n < 900) {
-            // 0 - 900
-            $n_format = number_format($n, $precision);
-            $suffix = '';
-        } else if ($n < 900000) {
-            // 0.9k-850k
-            $n_format = number_format($n / 1000, $precision);
-            $suffix = 'Rb';
-        } else if ($n < 900000000) {
-            // 0.9m-850m
-            $n_format = number_format($n / 1000000, $precision);
-            $suffix = 'Jt';
-        } else if ($n < 900000000000) {
-            // 0.9b-850b
-            $n_format = number_format($n / 1000000000, $precision);
-            $suffix = 'M';
-        } else {
-            // 0.9t+
-            $n_format = number_format($n / 1000000000000, $precision);
-            $suffix = 'T';
-        }
-    
-      // Remove unecessary zeroes after decimal. "1.0" -> "1"; "1.00" -> "1"
-      // Intentionally does not affect partials, eg "1.50" -> "1.50"
-        if ( $precision > 0 ) {
-            $dotzero = '.' . str_repeat( '0', $precision );
-            $n_format = str_replace( $dotzero, ' ', $n_format );
-        }
-    
-        return $n_format . $suffix;
-	}
-}
-if(! function_exists('linkfrontend')){
-	function linkfrontend()
-	{ 
-        return 'http://pengadaan.info/';
-	}
-}
-if(! function_exists('fspanTahap')){
-	function fspanTahap($tahap)
-    {
-    if($tahap =='' || empty($tahap)){
-        $datareturn = '<span class="badge badge-danger">Tahap Lelang Kosong</span>';
-    }elseif($tahap == 'Lelang Sudah Selesai' || $tahap == 'Tender Sudah Selesai'){
-        $datareturn = '<span class="badge badge-success"> <i class="fa fa-check-square"></i> '.ucwords($tahap).'</span>';
-    }else{
-        $datareturn = '<span class="badge badge-primary"> <i class="fa fa-clock-o"></i> '.ucwords($tahap).'</span>';
-    }
-    
-    return $datareturn;
-    }
-}
-
 if( !function_exists("saveAndResizeImage") )
 {
     function saveAndResizeImage( $image, $type, $dir_name, $width, $height, $old_image = null )
@@ -276,9 +55,9 @@ if( !function_exists("saveAndResizeImage") )
             Storage::disk('public')->makeDirectory( $dir, 0755, true, true );
         }
 
-        $file_name  =   uniqid() . '_' . $width . 'x' . $height . '.' . $image->getClientOriginalExtension();
+        $file_name  =   uniqid() . '.' . $image->getClientOriginalExtension();
         $str_path   =   $dir . '/' . $file_name;
-        $path       =   public_path( 'storage/' . $str_path );
+        $path       =   public_path( 'src/' . $str_path );
 		// $request->file('file')->extension();
 
 
@@ -314,7 +93,7 @@ if( !function_exists('uploadFile') )
         if( $file )
         {
             $file_name  =   uniqid() . '.' . $file->extension();
-            $output     =   $file->move( public_path('storage/' . $file_path), $file_name);
+            $output     =   $file->move( public_path('src/' . $file_path), $file_name);
         }
 
         return $file_path . $file_name;
@@ -328,17 +107,18 @@ if( !function_exists("unlinkFile"))
 	if( empty($path) || !isset($path) || !$path )
             return false;
 
-        if(File::exists(public_path( 'storage/' . $path )))
+        if(File::exists(public_path( 'src/' . $path )))
         {
-            File::delete(public_path( 'storage/' . $path ));
+            File::delete(public_path( 'src/' . $path ));
 
             //Check if folder empty
-            $files  =   File::files(public_path( 'storage/' . dirname($path) ));
+            $files  =   File::files(public_path( 'src/' . dirname($path) ));
             if(empty($files))
-                File::deleteDirectory( public_path( 'storage/' . dirname($path)) );
+                File::deleteDirectory( public_path( 'src/' . dirname($path)) );
         }
     }
 }
+
 
 if( !function_exists("fLogs"))
 {
@@ -364,22 +144,265 @@ if( !function_exists("fLogs"))
     }
 }
 
-/*
-    select concat(val,' ',cnt) as result from(
-    select (substring_index(substring_index(t.title, ' ', n.n), ' ', -1)) val,count(*) as cnt
-        from auction t cross join(
-         select a.n + b.n * 10 + 1 n
-         from 
-                (select 0 as n union all select 1 union all select 2 union all select 3 
-                        union all select 4 union all select 5 union all select 6 
-                        union all select 7 union all select 8 union all select 9) a,
-                (select 0 as n union all select 1 union all select 2 union all select 3 
-                        union all select 4 union all select 5 union all select 6 
-                        union all select 7 union all select 8 union all select 9) b
-                order by n 
-        ) n
-    where n.n <= 1 + (length(t.title) - length(replace(t.title, ' ', '')))
-    group by val
-    order by cnt desc
-) as x
- */
+if(!function_exists('config_path'))
+{
+        /**
+        * Return the path to config files
+        * @param null $path
+        * @return string
+        */
+        function config_path($path=null)
+        {
+                return app()->getConfigurationPath(rtrim($path, ".php"));
+        }
+}
+
+if(!function_exists('public_path'))
+{
+
+        /**
+        * Return the path to public dir
+        * @param null $path
+        * @return string
+        */
+        function public_path($path=null)
+        {
+                return rtrim(app()->basePath('public/'.$path), '/');
+        }
+}
+
+if(!function_exists('storage_path'))
+{
+
+        /**
+        * Return the path to storage dir
+        * @param null $path
+        * @return string
+        */
+        function storage_path($path=null)
+        {
+                return app()->storagePath($path);
+        }
+}
+
+if(!function_exists('database_path'))
+{
+
+        /**
+        * Return the path to database dir
+        * @param null $path
+        * @return string
+        */
+        function database_path($path=null)
+        {
+                return app()->databasePath($path);
+        }
+}
+
+if(!function_exists('resource_path'))
+{
+
+        /**
+        * Return the path to resource dir
+        * @param null $path
+        * @return string
+        */
+        function resource_path($path=null)
+        {
+                return app()->resourcePath($path);
+        }
+}
+
+if(!function_exists('lang_path'))
+{
+
+        /**
+        * Return the path to lang dir
+        * @param null $str
+        * @return string
+        */
+        function lang_path($path=null)
+        {
+                return app()->getLanguagePath($path);
+        }
+}
+
+if ( ! function_exists('asset'))
+{
+    /**
+     * Generate an asset path for the application.
+     *
+     * @param  string  $path
+     * @param  bool    $secure
+     * @return string
+     */
+    function asset($path, $secure = null)
+    {
+        return app('url')->asset($path, $secure);
+    }
+}
+
+if ( ! function_exists('elixir'))
+{
+    /**
+     * Get the path to a versioned Elixir file.
+     *
+     * @param  string  $file
+     * @return string
+     */
+    function elixir($file)
+    {
+        static $manifest = null;
+        if (is_null($manifest))
+        {
+            $manifest = json_decode(file_get_contents(public_path().'/build/rev-manifest.json'), true);
+        }
+        if (isset($manifest[$file]))
+        {
+            return '/build/'.$manifest[$file];
+        }
+        throw new InvalidArgumentException("File {$file} not defined in asset manifest.");
+    }
+}
+
+if ( ! function_exists('auth'))
+{
+    /**
+     * Get the available auth instance.
+     *
+     * @return \Illuminate\Contracts\Auth\Guard
+     */
+    function auth()
+    {
+        return app('Illuminate\Contracts\Auth\Guard');
+    }
+}
+
+if ( ! function_exists('bcrypt'))
+{
+    /**
+     * Hash the given value.
+     *
+     * @param  string  $value
+     * @param  array   $options
+     * @return string
+     */
+    function bcrypt($value, $options = array())
+    {
+        return app('hash')->make($value, $options);
+    }
+}
+
+if ( ! function_exists('redirect'))
+{
+    /**
+     * Get an instance of the redirector.
+     *
+     * @param  string|null  $to
+     * @param  int     $status
+     * @param  array   $headers
+     * @param  bool    $secure
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    function redirect($to = null, $status = 302, $headers = array(), $secure = null)
+    {
+        if (is_null($to)) return app('redirect');
+        return app('redirect')->to($to, $status, $headers, $secure);
+    }
+}
+
+if ( ! function_exists('response'))
+{
+    /**
+     * Return a new response from the application.
+     *
+     * @param  string  $content
+     * @param  int     $status
+     * @param  array   $headers
+     * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Routing\ResponseFactory
+     */
+    function response($content = '', $status = 200, array $headers = array())
+    {
+        $factory = app('Illuminate\Contracts\Routing\ResponseFactory');
+        if (func_num_args() === 0)
+        {
+            return $factory;
+        }
+        return $factory->make($content, $status, $headers);
+    }
+}
+
+if ( ! function_exists('secure_asset'))
+{
+    /**
+     * Generate an asset path for the application.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    function secure_asset($path)
+    {
+        return asset($path, true);
+    }
+}
+
+if ( ! function_exists('secure_url'))
+{
+    /**
+     * Generate a HTTPS url for the application.
+     *
+     * @param  string  $path
+     * @param  mixed   $parameters
+     * @return string
+     */
+    function secure_url($path, $parameters = array())
+    {
+        return url($path, $parameters, true);
+    }
+}
+
+
+if ( ! function_exists('session'))
+{
+    /**
+     * Get / set the specified session value.
+     *
+     * If an array is passed as the key, we will assume you want to set an array of values.
+     *
+     * @param  array|string  $key
+     * @param  mixed  $default
+     * @return mixed
+     */
+    function session($key = null, $default = null)
+    {
+        if (is_null($key)) return app('session');
+        if (is_array($key)) return app('session')->put($key);
+        return app('session')->get($key, $default);
+    }
+}
+
+
+if ( ! function_exists('cookie'))
+{
+    /**
+     * Create a new cookie instance.
+     *
+     * @param  string  $name
+     * @param  string  $value
+     * @param  int     $minutes
+     * @param  string  $path
+     * @param  string  $domain
+     * @param  bool    $secure
+     * @param  bool    $httpOnly
+     * @return \Symfony\Component\HttpFoundation\Cookie
+     */
+    function cookie($name = null, $value = null, $minutes = 0, $path = null, $domain = null, $secure = false, $httpOnly = true)
+    {
+        $cookie = app('Illuminate\Contracts\Cookie\Factory');
+        if (is_null($name))
+        {
+            return $cookie;
+        }
+        return $cookie->make($name, $value, $minutes, $path, $domain, $secure, $httpOnly);
+    }
+}
