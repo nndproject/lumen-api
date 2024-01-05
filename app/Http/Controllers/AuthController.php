@@ -11,7 +11,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        
+
         $this->middleware('auth:api', ['except' => ['login', 'refresh', 'logout']]);
     }
     /**
@@ -50,11 +50,11 @@ class AuthController extends Controller
             'api_token' => $generateToken,
             'remember_token' => $generateToken,
         ]); */
-        if(empty($user->api_token) || $user->api_token == ''){
+        /* if(empty($user->api_token) || $user->api_token == ''){
             $user->update([
                 'api_token' => $token,
             ]);
-        }
+        } */
 
         return $this->respondWithToken($token);
     }
@@ -88,7 +88,7 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        if(!empty(auth()->user())){
+        /* if(!empty(auth()->user())){
             try {
                 $newToken = auth()->refresh();
                 User::where('id', auth()->user()->id)->update([
@@ -99,7 +99,8 @@ class AuthController extends Controller
             }
         }
 
-        return $this->respondWithToken($newToken);
+        return $this->respondWithToken($newToken); */
+        return $this->respondWithToken(auth()->refresh());
     }
 
     /**
@@ -111,10 +112,14 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
+        $auth = auth()->user();
+        $dataAuth['id']= $auth->id;
+        $dataAuth['name'] = $auth->name;
+        $dataAuth['email'] = $auth->email;
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'user' => auth()->user(),
+            'user' => $dataAuth,
             'expires_in' => auth()->factory()->getTTL() * 60 * 24
         ]);
     }

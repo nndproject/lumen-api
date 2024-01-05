@@ -15,6 +15,7 @@ class SpatiePermissionSeeder extends Seeder
      */
     public function run()
     {
+        // php artisan db:seed --class=SpatiePermissionSeeder
          // Reset cached roles and permissions
     //  app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
@@ -29,7 +30,7 @@ class SpatiePermissionSeeder extends Seeder
         // this can be done as separate statements
         $role = Role::create(['name' => 'writer']);
         $role->givePermissionTo('edit articles');
-   
+
         $role = Role::create(['name' => 'admin'])
             ->givePermissionTo(['publish articles', 'unpublish articles']);
 

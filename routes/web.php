@@ -16,8 +16,8 @@
 */
 
 $router->get('/', function () use ($router) {
-    return view('index');
-    // return $router->app->version();
+    // return view('index');
+    return $router->app->version();
 });
 
 Route::group([
@@ -30,10 +30,9 @@ Route::group([
 
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
-    Route::post('user-profile', 'AuthController@me');
+    Route::post('profile', 'AuthController@me');
 
     Route::group(['middleware' => 'auth:api'], function(){
-        Route::get('warranty/{id}', 'WarrantyController@checkWarranty');
 
         Route::group(['prefix' => 'master-certificate'], function() {
             Route::get('/', 'MasterCertificateController@index');

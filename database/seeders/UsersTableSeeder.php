@@ -16,8 +16,9 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        // php artisan db:seed --class=UsersTableSeeder
         $users = User::create([
-            'name' => 'Admin', 
+            'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('admin1')
         ]);
